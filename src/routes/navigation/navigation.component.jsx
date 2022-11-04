@@ -32,7 +32,7 @@ const Navigation = () => {
               SIGN IN
             </Link>
           )}
-          <CartIcon />
+          <CartIcon  />
         </div>
         { isCartOpen && <CartDropdown /> }
       </div>
