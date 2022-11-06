@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { createAuthUserWithEmailAndPassword, createUserDocumentFromAuth } from "../../utils/firebase.utils";
+import { useDispatch } from "react-redux";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
-import './signup-form.styles.scss';
+import { SignUpContainer } from './signup-form.styles';
+import { signUpStart } from "../../store/user/user.action";
 
 const defaultFormFields = {
     displayName: '',
@@ -14,7 +15,7 @@ const defaultFormFields = {
 const SignUpForm = () => {
     const [formFields, setFormFields] = useState(defaultFormFields);
     const { displayName, email, password, confirmPassword } = formFields;
-
+    const dispatch = useDispatch();
     const resetFormFields = () => setFormFields(defaultFormFields);
 
     const handleSubmit = async (e) => {
@@ -24,8 +25,7 @@ const SignUpForm = () => {
             return;
         }
         try {
-            const {user} = await createAuthUserWithEmailAndPassword(email, password);
-            await createUserDocumentFromAuth(user, { displayName });
+            dispatch(signUpStart(email, password, displayName));
             resetFormFields();
             
         } catch (error) {
@@ -43,7 +43,7 @@ const SignUpForm = () => {
     }
 
   return (
-    <div className="sign-up-container">
+    <SignUpContainer>
         <h2>Don't have an account?</h2>
         <span>Sign Up with Email and Password</span>
         <form onSubmit={handleSubmit}>
@@ -53,7 +53,7 @@ const SignUpForm = () => {
             <FormInput label='Confirm Password' required type="password" onChange={handleChange} name='confirmPassword' value={confirmPassword} />
             <Button type="submit">Enviar</Button>
         </form>
-    </div>
+    </SignUpContainer>
   )
 }
 
